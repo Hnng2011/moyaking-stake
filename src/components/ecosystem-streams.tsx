@@ -23,7 +23,8 @@ const RarityColor = {
 const streams = [
   {
     name: "Moyaking #500",
-    amount: "400",
+    amount: "0.4",
+    power: "200",
     backgroundImage:
       "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/1.png",
     rarity: "legendary",
@@ -31,15 +32,16 @@ const streams = [
   },
   {
     name: "Moyaking #400",
-    amount: "200",
-
+    amount: "0.3",
+    power: "400",
     backgroundImage:
       "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/2.png", // thay bằng link thật
     rarity: "common",
   },
   {
     name: "Moyaking #332",
-    amount: "200",
+    amount: "0.2",
+    power: "100",
 
     backgroundImage:
       "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/3.png",
@@ -47,7 +49,8 @@ const streams = [
   },
   {
     name: "Moyaking #210",
-    amount: "100",
+    amount: "0.998",
+    power: "300",
 
     backgroundImage:
       "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/4.png",
@@ -55,7 +58,8 @@ const streams = [
   },
   {
     name: "Moyaking #322",
-    amount: "100",
+    amount: "0.39",
+    power: "300",
     backgroundImage:
       "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/5.png",
     rarity: "superrare",
@@ -80,7 +84,7 @@ export function EcosystemStreams() {
       </div>
 
       {/* Grid Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {streams.map((stream) => (
           <Card
             key={stream.name}
@@ -96,25 +100,35 @@ export function EcosystemStreams() {
             </div>
 
             {/* Overlay Content */}
-            <CardContent className="relative z-10 flex flex-col items-center justify-between h-80 text-center">
+            <CardContent className="relative z-10 flex flex-col items-center justify-between h-90 text-center">
               {/* Top: Info Icon */}
               <div className="flex justify-between w-full items-center">
-                <div
-                  className={cn(
-                    "py-1 px-3 rounded-lg border text-xs",
-                    RarityColor[stream.rarity as keyof typeof RarityColor]
-                  )}
-                >
-                  {stream.rarity.toUpperCase()}
+                <div className="flex items-center gap-2">
+                  <div
+                    className={cn(
+                      "py-1 px-3 rounded-lg border text-xs",
+                      RarityColor[stream.rarity as keyof typeof RarityColor]
+                    )}
+                  >
+                    {stream.rarity.toUpperCase()}
+                  </div>
+                  <div
+                    className={cn(
+                      "py-1 px-3 rounded-lg border text-xs",
+                      RarityColor[stream.rarity as keyof typeof RarityColor]
+                    )}
+                  >
+                    {stream.power}%
+                  </div>
                 </div>
                 <div className="cursor-pointer">
                   <Info className="w-5 h-5 text-white/60 hover:text-white transition-colors" />
                 </div>
               </div>
 
-              <div className="flex-1 flex flex-col items-center justify-center space-y-6">
+              <div className="flex-1 flex flex-col items-center justify-center space-y-6 mt-4">
                 {/* Project Icon */}
-                <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center shadow-xl overflow-hidden">
+                <div className="w-32 h-32 rounded-2xl bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center shadow-xl overflow-hidden">
                   <img
                     src={stream.backgroundImage}
                     alt={stream.name}
@@ -129,7 +143,7 @@ export function EcosystemStreams() {
 
                 <div className="bg-purple-500/20 border border-purple-400/50 backdrop-blur-md rounded-full px-3 py-1">
                   <span className="text-purple-300 font-bold text-lg">
-                    {stream.amount}%
+                    {stream.amount} MON
                   </span>
                 </div>
               </div>
