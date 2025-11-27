@@ -1,8 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { NFTStakeModal } from "./nft-stake-modal";
+import { streams } from "@/fake-data";
+import { useState } from "react";
 
 export function PromoCards() {
+  const [openModal, setOpenModal] = useState(true);
   return (
     <div className="grid grid-cols-2 gap-4 h-full">
       <Card className="bg-linear-to-br from-emerald-600 to-cyan-600 border-0 rounded-2xl overflow-hidden">
@@ -13,7 +17,7 @@ export function PromoCards() {
           <p className="text-xs text-gray-300 relative z-10">
             Top the leaderboard & secure your MON airdrop!
           </p>
-          <Button className="text-white/90 text-lg w-fit z-10 translate-y-16 group-hover:translate-y-0">
+          <Button className="text-white/90 text-lg w-fit z-10 lg:translate-y-16 lg:group-hover:translate-y-0">
             Claim
           </Button>
           <motion.div
@@ -96,9 +100,12 @@ export function PromoCards() {
           <p className="text-xs text-gray-300">
             Staking to earn reward right today!
           </p>
-          <Button className="text-white/90 text-lg w-fit relative translate-y-16 group-hover:translate-y-0">
-            Stake
-          </Button>
+
+          <NFTStakeModal
+            open={openModal}
+            streams={streams}
+            onOpenChange={setOpenModal}
+          />
         </CardContent>
       </Card>
     </div>

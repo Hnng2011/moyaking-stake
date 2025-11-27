@@ -4,69 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
-
-enum Rarity {
-  Legendary = "legendary",
-  Common = "common",
-  Uncommon = "uncommon",
-  Rare = "rare",
-  SuperRare = "superrare",
-}
-
-const RarityColor = {
-  [Rarity.Legendary]: "bg-red-500/20 text-red-500 border-red-500/50",
-  [Rarity.Common]: "bg-gray-500/20 text-gray-500 border-gray-500/50",
-  [Rarity.Uncommon]: "bg-emerald-500/20 text-emerald-500 border-emerald-500/50",
-  [Rarity.Rare]: "bg-blue-500/20 text-blue-500 border-blue-500/50",
-  [Rarity.SuperRare]: "bg-amber-500/20 text-amber-500 border-amber-500/50",
-};
-
-const streams = [
-  {
-    name: "Moyaking #500",
-    amount: "0.4",
-    power: "200",
-    backgroundImage:
-      "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/1.png",
-    rarity: "legendary",
-    lockUntil: "2025-22-04",
-  },
-  {
-    name: "Moyaking #400",
-    amount: "0.3",
-    power: "400",
-    backgroundImage:
-      "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/2.png", // thay bằng link thật
-    rarity: "common",
-  },
-  {
-    name: "Moyaking #332",
-    amount: "0.2",
-    power: "100",
-
-    backgroundImage:
-      "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/3.png",
-    rarity: "uncommon",
-  },
-  {
-    name: "Moyaking #210",
-    amount: "0.998",
-    power: "300",
-
-    backgroundImage:
-      "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/4.png",
-    rarity: "rare",
-  },
-  {
-    name: "Moyaking #322",
-    amount: "0.39",
-    power: "300",
-    backgroundImage:
-      "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/5.png",
-    rarity: "superrare",
-  },
-  // Thêm bao nhiêu cũng được, chỉ cần có backgroundImage
-];
+import { streams } from "@/fake-data";
+import { RarityColor } from "@/constants/rarity";
 
 export function EcosystemStreams() {
   const [isOpen, setIsOpen] = useState<string>("");
