@@ -6,7 +6,7 @@ import { streams } from "@/fake-data";
 import { useState } from "react";
 
 export function PromoCards() {
-  const [openModal, setOpenModal] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
   return (
     <div className="grid grid-cols-2 gap-4 h-full">
       <Card className="bg-linear-to-br from-emerald-600 to-cyan-600 border-0 rounded-2xl overflow-hidden">
