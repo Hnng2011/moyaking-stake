@@ -2,7 +2,8 @@ import { Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
 
 enum Rarity {
   Legendary = "legendary",
@@ -68,6 +69,23 @@ const streams = [
 ];
 
 export function EcosystemStreams() {
+  const [isOpen, setIsOpen] = useState<string>("");
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleHoverStart = (name: string) => {
+    timerRef.current = setTimeout(() => {
+      setIsOpen(name);
+    }, 500);
+  };
+
+  const handleHoverEnd = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
   return (
     <div className="space-y-8 py-8">
       {/* Header */}
@@ -86,108 +104,147 @@ export function EcosystemStreams() {
       {/* Grid Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {streams.map((stream) => (
-          <Card
-            key={stream.name}
-            className="group relative border-0 rounded-3xl overflow-hidden bg-black/40 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20"
-          >
-            {/* Background Image */}
-            <div className="absolute inset-0">
-              <img
-                src={stream.backgroundImage}
-                alt={stream.name}
-                className="w-full h-full object-cover brightness-50 blur-sm transition-all duration-500"
-              />
-            </div>
+          <div key={stream.name}>
+            <AnimatePresence>
+              {stream.name === isOpen && (
+                <>
+                  <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-2xl"></div>
+                  <motion.div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-8"
+                    initial={{ scale: 0.2 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.2, opacity: 0 }}
+                  >
+                    <motion.div className="relative max-w-2xl max-h-full rounded-3xl overflow-hidden shadow-2xl">
+                      <img
+                        src={stream.backgroundImage}
+                        alt={stream.name}
+                        className="w-full h-full object-contain max-h-screen"
+                      />
 
-            {/* Overlay Content */}
-            <CardContent className="relative z-10 flex flex-col items-center justify-between h-90 text-center">
-              {/* Top: Info Icon */}
-              <div className="flex justify-between w-full items-center">
-                <div className="flex items-center gap-2">
-                  <div
-                    className={cn(
-                      "py-1 px-3 rounded-lg border text-xs",
-                      RarityColor[stream.rarity as keyof typeof RarityColor]
-                    )}
-                  >
-                    {stream.rarity.toUpperCase()}
-                  </div>
-                  <div
-                    className={cn(
-                      "py-1 px-3 rounded-lg border text-xs",
-                      RarityColor[stream.rarity as keyof typeof RarityColor]
-                    )}
-                  >
-                    {stream.power}%
-                  </div>
-                </div>
-                <div className="cursor-pointer">
-                  <Info className="w-5 h-5 text-white/60 hover:text-white transition-colors" />
-                </div>
+                      <button
+                        onClick={() => setIsOpen("")}
+                        className="absolute top-4 right-4 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white text-2xl hover:bg-white/30 transition"
+                      >
+                        ×
+                      </button>
+
+                      <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent text-white">
+                        <h3 className="text-3xl font-bold">{stream.name}</h3>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+
+            <Card className="group relative border-0 rounded-3xl overflow-hidden bg-black/40 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20">
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <img
+                  src={stream.backgroundImage}
+                  alt={stream.name}
+                  className="w-full h-full object-cover brightness-50 blur-sm transition-all duration-500"
+                />
               </div>
 
-              <div className="flex-1 flex flex-col items-center justify-center space-y-6 mt-4">
-                {/* Project Icon */}
-                <div className="w-32 h-32 rounded-2xl bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center shadow-xl overflow-hidden">
-                  <img
-                    src={stream.backgroundImage}
-                    alt={stream.name}
-                    className="w-full h-full object-cover"
-                  />
+              {/* Overlay Content */}
+              <CardContent className="relative z-10 flex flex-col items-center justify-between h-90 text-center">
+                {/* Top: Info Icon */}
+                <div className="flex justify-between w-full items-center">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={cn(
+                        "py-1 px-3 rounded-lg border text-xs",
+                        RarityColor[stream.rarity as keyof typeof RarityColor]
+                      )}
+                    >
+                      {stream.rarity.toUpperCase()}
+                    </div>
+                    <div
+                      className={cn(
+                        "py-1 px-3 rounded-lg border text-xs",
+                        RarityColor[stream.rarity as keyof typeof RarityColor]
+                      )}
+                    >
+                      {stream.power}%
+                    </div>
+                  </div>
+                  <div className="cursor-pointer">
+                    <Info className="w-5 h-5 text-white/60 hover:text-white transition-colors" />
+                  </div>
                 </div>
 
-                {/* Name */}
-                <h3 className="text-xl font-bold text-white tracking-wide">
-                  {stream.name}
-                </h3>
-
-                <div className="bg-purple-500/20 border border-purple-400/50 backdrop-blur-md rounded-full px-3 py-1">
-                  <span className="text-purple-300 font-bold text-lg">
-                    {stream.amount} MON
-                  </span>
-                </div>
-              </div>
-
-              <Button
-                disabled={!!stream.lockUntil}
-                className="w-full disabled:bg-black disabled:text-white mt-6 bg-white text-black hover:text-white font-semibold rounded-xl transition-all duration-300"
-              >
-                {!!stream.lockUntil && (
-                  <motion.span
-                    className="relative flex h-2 w-2 mr-2"
-                    animate={{
-                      scale: [1, 1.4, 1],
-                      opacity: [0.8, 0.4, 0.8],
-                    }}
-                    transition={{
-                      duration: 2,
-                      ease: "easeInOut",
-                      repeat: Infinity,
-                    }}
+                <div className="flex-1 flex flex-col items-center justify-center space-y-6 mt-4">
+                  {/* Project Icon */}
+                  <motion.div
+                    className="w-32 h-32 rounded-2xl bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center shadow-xl overflow-hidden cursor-pointer relative"
+                    onHoverStart={() => handleHoverStart(stream.name)}
+                    onHoverEnd={() => handleHoverEnd()}
+                    whileHover={{ scale: 1.2 }}
+                    transition={{ duration: 0.5 }}
+                    layoutId={`stream-${stream.name}`}
                   >
+                    <img
+                      src={stream.backgroundImage}
+                      alt={stream.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+
+                  {/* Name */}
+                  <h3 className="text-xl font-bold text-white tracking-wide">
+                    {stream.name}
+                  </h3>
+
+                  <div className="bg-purple-500/20 border border-purple-400/50 backdrop-blur-md rounded-full px-3 py-1">
+                    <span className="text-purple-300 font-bold text-lg">
+                      {stream.amount} MON
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  disabled={!!stream.lockUntil}
+                  className="w-full disabled:bg-black disabled:text-white mt-6 bg-white text-black hover:text-white font-semibold rounded-xl transition-all duration-300"
+                >
+                  {!!stream.lockUntil && (
                     <motion.span
-                      className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"
+                      className="relative flex h-2 w-2 mr-2"
                       animate={{
-                        scale: [1, 2.5, 1],
-                        opacity: [0.7, 0, 0.7],
+                        scale: [1, 1.4, 1],
+                        opacity: [0.8, 0.4, 0.8],
                       }}
                       transition={{
                         duration: 2,
-                        ease: "easeOut",
+                        ease: "easeInOut",
                         repeat: Infinity,
                       }}
-                    />
+                    >
+                      <motion.span
+                        className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"
+                        animate={{
+                          scale: [1, 2.5, 1],
+                          opacity: [0.7, 0, 0.7],
+                        }}
+                        transition={{
+                          duration: 2,
+                          ease: "easeOut",
+                          repeat: Infinity,
+                        }}
+                      />
 
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
-                  </motion.span>
-                )}
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                    </motion.span>
+                  )}
 
-                {!!stream.lockUntil
-                  ? `Locked until ${stream.lockUntil}`
-                  : "Claim Rewards"}
-              </Button>
-            </CardContent>
-          </Card>
+                  {!!stream.lockUntil
+                    ? `Locked until ${stream.lockUntil}`
+                    : "Claim Rewards"}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         ))}
       </div>
     </div>
