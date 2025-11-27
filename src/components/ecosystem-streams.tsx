@@ -2,6 +2,7 @@ import { Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 enum Rarity {
   Legendary = "legendary",
@@ -26,6 +27,7 @@ const streams = [
     backgroundImage:
       "https://ipfs-proxy.magiceden.dev/ipfs/bafybeiah6mxjkphhhnbtz6fbkoweewaak6i4qbrfaseftcumgsduodfjnm/1.png",
     rarity: "legendary",
+    lockUntil: "2025-22-04",
   },
   {
     name: "Moyaking #400",
@@ -132,9 +134,43 @@ export function EcosystemStreams() {
                 </div>
               </div>
 
-              {/* Claim Button */}
-              <Button className="w-full mt-6 bg-white text-black hover:text-white font-semibold rounded-xl transition-all duration-300">
-                Claim Rewards
+              <Button
+                disabled={!!stream.lockUntil}
+                className="w-full disabled:bg-black disabled:text-white mt-6 bg-white text-black hover:text-white font-semibold rounded-xl transition-all duration-300"
+              >
+                {!!stream.lockUntil && (
+                  <motion.span
+                    className="relative flex h-2 w-2 mr-2"
+                    animate={{
+                      scale: [1, 1.4, 1],
+                      opacity: [0.8, 0.4, 0.8],
+                    }}
+                    transition={{
+                      duration: 2,
+                      ease: "easeInOut",
+                      repeat: Infinity,
+                    }}
+                  >
+                    <motion.span
+                      className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"
+                      animate={{
+                        scale: [1, 2.5, 1],
+                        opacity: [0.7, 0, 0.7],
+                      }}
+                      transition={{
+                        duration: 2,
+                        ease: "easeOut",
+                        repeat: Infinity,
+                      }}
+                    />
+
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                  </motion.span>
+                )}
+
+                {!!stream.lockUntil
+                  ? `Locked until ${stream.lockUntil}`
+                  : "Claim Rewards"}
               </Button>
             </CardContent>
           </Card>
