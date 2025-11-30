@@ -3,6 +3,7 @@ import { StakingCard } from "./staking-card";
 import { PromoCards } from "./promo-cards";
 import { EcosystemStreams } from "./ecosystem-streams";
 import { StakingPoolRewards } from "./staking-pool-reward";
+import { RarityInfo } from "./rarity-info";
 
 export function MOYAKINGDashboard() {
   return (
@@ -25,6 +26,10 @@ export function MOYAKINGDashboard() {
 
       <div className="container mx-auto px-8">
         <StakingPoolRewards />
+      </div>
+
+      <div className="container mx-auto px-8">
+        <RarityInfo />
       </div>
     </div>
   );

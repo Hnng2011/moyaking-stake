@@ -6,6 +6,22 @@ export enum Rarity {
   SuperRare = "superrare",
 }
 
+export const RarityStakingPower = {
+  [Rarity.Legendary]: 400,
+  [Rarity.Common]: 10,
+  [Rarity.Uncommon]: 50,
+  [Rarity.Rare]: 100,
+  [Rarity.SuperRare]: 200,
+};
+
+export const RarityLabel = {
+  [Rarity.Legendary]: "Legendary",
+  [Rarity.Common]: "Common",
+  [Rarity.Uncommon]: "Uncommon",
+  [Rarity.Rare]: "Rare",
+  [Rarity.SuperRare]: "Super Rare",
+};
+
 export const RarityColor = {
   [Rarity.Legendary]: "bg-red-500/20 text-red-500 border-red-500/50",
   [Rarity.Common]: "bg-gray-500/20 text-gray-500 border-gray-500/50",
