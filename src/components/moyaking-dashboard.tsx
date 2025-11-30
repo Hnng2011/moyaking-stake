@@ -2,6 +2,7 @@ import { Header } from "./header";
 import { StakingCard } from "./staking-card";
 import { PromoCards } from "./promo-cards";
 import { EcosystemStreams } from "./ecosystem-streams";
+import { StakingPoolRewards } from "./staking-pool-reward";
 
 export function MOYAKINGDashboard() {
   return (
@@ -18,8 +19,12 @@ export function MOYAKINGDashboard() {
         </div>
       </main>
 
-      <div className="container mx-auto  px-8">
+      <div className="container mx-auto px-8">
         <EcosystemStreams />
+      </div>
+
+      <div className="container mx-auto px-8">
+        <StakingPoolRewards />
       </div>
     </div>
   );
