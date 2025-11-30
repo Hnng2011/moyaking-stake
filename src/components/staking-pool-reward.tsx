@@ -13,7 +13,7 @@ export function StakingPoolRewards() {
 
       <div className="grid grid-cols-2 gap-8">
         <div className="w-full">
-          <h2 className="text-2xl text-purple-500 font-semibold text-center">
+          <h2 className="text-xl text-purple-500 font-semibold text-center">
             NFT Rewards
           </h2>
 
@@ -36,7 +36,7 @@ export function StakingPoolRewards() {
           </div>
         </div>
         <div className="w-full">
-          <h2 className="text-2xl text-purple-500 font-semibold  text-center">
+          <h2 className="text-xl text-purple-500 font-semibold  text-center">
             Token Rewards
           </h2>
 
