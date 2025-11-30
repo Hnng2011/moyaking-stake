@@ -1,6 +1,6 @@
 import {
   Rarity,
-  RarityColor,
+  RarityColorInfo,
   RarityLabel,
   RarityStakingPower,
 } from "@/constants/rarity";
@@ -31,7 +31,9 @@ export function RarityInfo() {
           </div>
         </div>
 
-        <div className={cn(RarityColor[Rarity.Legendary], "p-2 rounded-lg")}>
+        <div
+          className={cn(RarityColorInfo[Rarity.Legendary], "p-2 rounded-lg")}
+        >
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
               <h2>{RarityLabel[Rarity.Legendary]}</h2>
@@ -41,7 +43,9 @@ export function RarityInfo() {
             </div>
           </div>
         </div>
-        <div className={cn(RarityColor[Rarity.SuperRare], "p-2 rounded-lg")}>
+        <div
+          className={cn(RarityColorInfo[Rarity.SuperRare], "p-2 rounded-lg")}
+        >
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
               <h2>{RarityLabel[Rarity.SuperRare]}</h2>
@@ -51,7 +55,7 @@ export function RarityInfo() {
             </div>
           </div>
         </div>
-        <div className={cn(RarityColor[Rarity.Rare], "p-2 rounded-lg")}>
+        <div className={cn(RarityColorInfo[Rarity.Rare], "p-2 rounded-lg")}>
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
               <h2>{RarityLabel[Rarity.Rare]}</h2>
@@ -61,7 +65,7 @@ export function RarityInfo() {
             </div>
           </div>
         </div>
-        <div className={cn(RarityColor[Rarity.Uncommon], "p-2 rounded-lg")}>
+        <div className={cn(RarityColorInfo[Rarity.Uncommon], "p-2 rounded-lg")}>
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
               <h2>{RarityLabel[Rarity.Uncommon]}</h2>
@@ -71,7 +75,7 @@ export function RarityInfo() {
             </div>
           </div>
         </div>
-        <div className={cn(RarityColor[Rarity.Common], "p-2 rounded-lg")}>
+        <div className={cn(RarityColorInfo[Rarity.Common], "p-2 rounded-lg")}>
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
               <h2>{RarityLabel[Rarity.Common]}</h2>
