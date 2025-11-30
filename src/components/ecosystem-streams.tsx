@@ -91,24 +91,6 @@ export function EcosystemStreams() {
               <CardContent className="relative z-10 flex flex-col items-center justify-between h-90 text-center">
                 {/* Top: Info Icon */}
                 <div className="flex justify-between w-full items-center">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={cn(
-                        "py-1 px-3 rounded-lg border text-xs",
-                        RarityColor[stream.rarity as keyof typeof RarityColor]
-                      )}
-                    >
-                      {stream.rarity.toUpperCase()}
-                    </div>
-                    <div
-                      className={cn(
-                        "py-1 px-3 rounded-lg border text-xs",
-                        RarityColor[stream.rarity as keyof typeof RarityColor]
-                      )}
-                    >
-                      {stream.power}%
-                    </div>
-                  </div>
                   <div className="cursor-pointer">
                     <Info className="w-5 h-5 text-white/60 hover:text-white transition-colors" />
                   </div>
@@ -138,7 +120,7 @@ export function EcosystemStreams() {
 
                   <div className="bg-purple-500/20 border border-purple-400/50 backdrop-blur-md rounded-full px-3 py-1">
                     <span className="text-purple-300 font-bold text-lg">
-                      {stream.amount} MON
+                      {stream.amount} POINT
                     </span>
                   </div>
                 </div>
@@ -179,7 +161,7 @@ export function EcosystemStreams() {
 
                   {!!stream.lockUntil
                     ? `Locked until ${stream.lockUntil}`
-                    : "Claim Rewards"}
+                    : "Claim Points"}
                 </Button>
               </CardContent>
             </Card>
