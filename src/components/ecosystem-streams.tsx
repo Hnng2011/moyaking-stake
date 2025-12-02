@@ -42,6 +42,11 @@ export function EcosystemStreams() {
 
       {/* Grid Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {streams && streams.length === 0 && (
+          <div className="min-h-64 flex items-center justify-center w-full sm:col-span-2 lg:col-span-3 xl:col-span-4 text-zinc-200/50">
+            There is no Staking NFT(s) yet
+          </div>
+        )}
         {streams.map((stream) => (
           <div key={stream.name}>
             <AnimatePresence>
