@@ -18,20 +18,20 @@ export function StakingPoolRewards() {
           </h2>
 
           <div className="grid grid-cols-3 mt-8 place-items-center gap-8 bg-linear-to-br from-emerald-900 to-cyan-700 py-8 rounded-4xl">
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/1.svg" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full col-start-3">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full col-start-3">
+              <img src="/2.svg" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full col-start-2">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full col-start-2">
+              <img src="/3.svg" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full col-start-1">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full col-start-1">
+              <img src="/4.svg" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full col-start-3">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full col-start-3">
+              <img src="/5.svg" />
             </div>
           </div>
         </div>
@@ -41,32 +41,32 @@ export function StakingPoolRewards() {
           </h2>
 
           <div className="grid grid-cols-3 mt-8 place-items-center gap-8 py-8 rounded-4xl bg-linear-to-br from-purple-600/40 to-blue-600/40">
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/6.jpg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/7.jpg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/8.jpg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/9.jpg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/10.svg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/11.svg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/12.svg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/13.svg" className="object-fill" />
             </div>
-            <div className="bg-red-500 w-24 h-24 rounded-full">
-              <img></img>
+            <div className="overflow-hidden border-2 border-purple-700 w-24 h-24 rounded-full">
+              <img src="/14.svg" className="object-fill" />
             </div>
           </div>
         </div>
