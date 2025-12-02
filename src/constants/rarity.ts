@@ -6,6 +6,20 @@ export enum Rarity {
   SuperRare = "superrare",
 }
 
+export const MonthStakingPower = {
+  1: 10,
+  3: 50,
+  6: 100,
+  12: 200,
+};
+
+export const MonthLabel = {
+  1: "1 Month",
+  3: "3 Months",
+  6: "6 Months",
+  12: "12 Months",
+};
+
 export const RarityStakingPower = {
   [Rarity.Legendary]: 400,
   [Rarity.Common]: 10,
