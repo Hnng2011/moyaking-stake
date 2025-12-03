@@ -168,7 +168,7 @@ export function NFTStakeModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
+      <DialogTrigger className="px-0 w-fit">
         <Button className="text-white/90 text-lg w-fit relative lg:translate-y-32 lg:group-hover:translate-y-0 transition-transform">
           Stake
         </Button>
