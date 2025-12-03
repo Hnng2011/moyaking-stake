@@ -193,7 +193,7 @@ export function NFTStakeModal({
           </div>
         </ScrollArea>
 
-        <DialogFooter className="absolute bottom-0 w-full bg-zinc-900/90 backdrop-blur p-6 z-50 border-t border-zinc-800">
+        <DialogFooter className="absolute bottom-0 min-h-[61px] w-[98%] bg-zinc-900/90 backdrop-blur p-3 z-50 border-t border-zinc-800">
           {selected.length > 0 && (
             <Button
               onClick={handleStake}
