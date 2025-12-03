@@ -12,10 +12,10 @@ export function MOYAKINGDashboard() {
       <Header />
       <main className="container mx-auto py-4 bg-[#0d1117] z-20 mt-8 px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 h-full">
+          <div className="md:col-span-3 lg:col-span-2 h-full">
             <StakingCard />
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 md:col-span-3 lg:col-span-1">
             <PromoCards />
           </div>
         </div>

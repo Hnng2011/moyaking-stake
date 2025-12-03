@@ -1,209 +1,196 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogTrigger,
-} from "./ui/dialog";
-import { Stream } from "@/fake-data";
+import { Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "./ui/card";
-import { MonthLabel, RarityColor } from "@/constants/rarity";
-import { Button } from "./ui/button";
-import { useCallback, useEffect, useState, useMemo } from "react";
-import { CircleCheck } from "lucide-react";
-import { ScrollArea } from "./ui/scroll-area";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { streams } from "@/fake-data";
+import { RarityColor } from "@/constants/rarity";
 
-// --- Types ---
-interface NFTStakeModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  streams: Stream[] | null;
-}
+export function EcosystemStreams() {
+  const [isOpen, setIsOpen] = useState<string>("");
 
-interface SelectedItem {
-  name: string;
-  time: number;
-}
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-// --- Sub-Component: StreamCard (Tách ra để code gọn hơn) ---
-interface StreamCardProps {
-  stream: Stream;
-  isSelected: boolean;
-  selectedTime?: number;
-  onToggle: (name: string) => void;
-  onTimeChange: (name: string, time: number) => void;
-}
-
-const StreamCard = ({
-  stream,
-  isSelected,
-  selectedTime,
-  onToggle,
-  onTimeChange,
-}: StreamCardProps) => {
-  return (
-    <div onClick={() => onToggle(stream.name)}>
-      <Card className="group relative border-2 border-zinc-600 rounded-3xl bg-black/40 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:scale-95 overflow-hidden h-[360px]">
-        <div
-          className={cn(
-            "opacity-0 bg-black absolute inset-0 z-10 duration-100",
-            isSelected && "opacity-50"
-          )}
-        />
-
-        <div
-          className={cn(
-            "opacity-0 absolute right-4 top-4 z-20 duration-100",
-            isSelected && "delay-300 opacity-100"
-          )}
-        >
-          <CircleCheck className="w-6 h-6 text-purple-700" />
-        </div>
-
-        <div className="absolute inset-0 z-0">
-          <img
-            src={stream.backgroundImage}
-            alt={stream.name}
-            className="w-full h-full object-cover brightness-50 transition-all duration-500"
-          />
-        </div>
-
-        <CardContent className="relative z-10 flex flex-col items-center justify-between h-full p-6 text-center">
-          {!isSelected ? (
-            <>
-              <div
-                className={cn(
-                  "flex items-end gap-2 absolute top-0 delay-100 transition-transform duration-300",
-                  isSelected && "-translate-y-20 delay-0"
-                )}
-              >
-                <div
-                  className={cn(
-                    "py-1 px-3 rounded-lg border text-xs",
-                    RarityColor[stream.rarity as keyof typeof RarityColor]
-                  )}
-                >
-                  {stream.rarity.toUpperCase()}
-                </div>
-                <div
-                  className={cn(
-                    "py-1 px-3 rounded-lg border text-xs",
-                    RarityColor[stream.rarity as keyof typeof RarityColor]
-                  )}
-                >
-                  {stream.power}%
-                </div>
-              </div>
-
-              <h3
-                className={cn(
-                  "text-xl font-bold text-white tracking-wide absolute bottom-0 delay-100 transition-transform duration-300",
-                  isSelected && "translate-y-20 delay-0"
-                )}
-              >
-                {stream.name}
-              </h3>
-            </>
-          ) : (
-            <div className="text-white flex flex-col h-full w-full items-center justify-center gap-3 animate-in fade-in zoom-in duration-300">
-              {Object.entries(MonthLabel).map(([key, value]) => {
-                const timeValue = Number(key);
-                return (
-                  <Button
-                    key={key}
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent toggling card selection
-                      onTimeChange(stream.name, timeValue);
-                    }}
-                    className={cn(
-                      "w-full bg-zinc-600 text-black hover:bg-zinc-500 transition-colors",
-                      selectedTime === timeValue &&
-                        "bg-zinc-200 hover:bg-zinc-200"
-                    )}
-                  >
-                    {value}
-                  </Button>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-
-export function NFTStakeModal({
-  open,
-  onOpenChange,
-  streams,
-}: NFTStakeModalProps) {
-  const [selected, setSelected] = useState<SelectedItem[]>([]);
-
-  useEffect(() => {
-    if (open) setSelected([]);
-  }, [open]);
-
-  const handleToggleStream = useCallback((name: string) => {
-    setSelected((prev) => {
-      const exists = prev.some((item) => item.name === name);
-      if (exists) {
-        return prev.filter((item) => item.name !== name);
-      }
-      return [...prev, { name, time: 1 }]; // Default 1 month
-    });
-  }, []);
-
-  const handleTimeChange = useCallback((name: string, time: number) => {
-    setSelected((prev) =>
-      prev.map((item) => (item.name === name ? { ...item, time } : item))
-    );
-  }, []);
-
-  const handleStake = () => {
-    onOpenChange(false);
+  const handleHoverStart = (name: string) => {
+    timerRef.current = setTimeout(() => {
+      setIsOpen(name);
+    }, 500);
   };
 
-  if (!streams) return null;
+  const handleHoverEnd = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="text-white/90 text-lg w-fit relative lg:translate-y-16 lg:group-hover:translate-y-0 transition-transform">
-          Stake
+    <div className="space-y-8 py-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/5">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Staking Zone</h2>
+          <p className="text-gray-400 text-sm mt-1">
+            Earn rewards by staking MOYAKING
+          </p>
+        </div>
+        <Button className="bg-purple-600 hover:bg-purple-500 text-white rounded-xl px-8 font-medium">
+          Claim all
         </Button>
-      </DialogTrigger>
+      </div>
 
-      <DialogContent className="lg:max-w-[900px] max-h-[85vh] overflow-hidden bg-zinc-900 border-0 p-0 rounded-4xl">
-        <ScrollArea className="h-[70vh] p-8 md:p-12 rounded-3xl">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-6 h-full pb-8">
-            {streams.map((stream) => {
-              const selectedItem = selected.find((s) => s.name === stream.name);
-              return (
-                <StreamCard
-                  key={stream.name}
-                  stream={stream}
-                  isSelected={!!selectedItem}
-                  selectedTime={selectedItem?.time}
-                  onToggle={handleToggleStream}
-                  onTimeChange={handleTimeChange}
-                />
-              );
-            })}
+      {/* Grid Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {streams && streams.length === 0 && (
+          <div className="min-h-64 flex items-center justify-center w-full sm:col-span-2 lg:col-span-3 xl:col-span-4 text-zinc-200/50">
+            There is no Staking NFT(s) yet
           </div>
-        </ScrollArea>
+        )}
+        {streams.map((stream) => (
+          <div key={stream.name}>
+            <AnimatePresence>
+              {stream.name === isOpen && (
+                <>
+                  <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-2xl"></div>
+                  <motion.div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-8"
+                    initial={{ scale: 0.2 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.2, opacity: 0 }}
+                  >
+                    <motion.div className="relative max-w-2xl max-h-full rounded-3xl overflow-hidden shadow-2xl">
+                      <img
+                        src={stream.backgroundImage}
+                        alt={stream.name}
+                        className="w-full h-full object-contain max-h-screen"
+                      />
 
-        <DialogFooter className="absolute bottom-0 w-full bg-zinc-900/90 backdrop-blur p-6 z-50 border-t border-zinc-800">
-          {selected.length > 0 && (
-            <Button
-              onClick={handleStake}
-              className="w-full md:w-fit bg-purple-700 hover:bg-purple-600 transition-colors ml-auto"
-            >
-              Stake {selected.length} NFT(s)
-            </Button>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+                      <button
+                        onClick={() => setIsOpen("")}
+                        className="absolute top-4 right-4 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white text-2xl hover:bg-white/30 transition"
+                      >
+                        ×
+                      </button>
+
+                      <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent text-white">
+                        <h3 className="text-3xl font-bold">{stream.name}</h3>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+
+            <Card className="group relative border-0 rounded-3xl overflow-hidden bg-black/40 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20">
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <img
+                  src={stream.backgroundImage}
+                  alt={stream.name}
+                  className="w-full h-full object-cover brightness-50 blur-sm transition-all duration-500"
+                />
+              </div>
+
+              {/* Overlay Content */}
+              <CardContent className="relative z-10 flex flex-col items-center justify-between h-90 text-center">
+                {/* Top: Info Icon */}
+                <div className="flex justify-between w-full items-center">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={cn(
+                        "py-1 px-3 rounded-lg border text-xs",
+                        RarityColor[stream.rarity as keyof typeof RarityColor]
+                      )}
+                    >
+                      {stream.rarity.toUpperCase()}
+                    </div>
+                    <div
+                      className={cn(
+                        "py-1 px-3 rounded-lg border text-xs",
+                        RarityColor[stream.rarity as keyof typeof RarityColor]
+                      )}
+                    >
+                      {stream.power}%
+                    </div>
+                  </div>
+                  <div className="cursor-pointer">
+                    <Info className="w-5 h-5 text-white/60 hover:text-white transition-colors" />
+                  </div>
+                </div>
+
+                <div className="flex-1 flex flex-col items-center justify-center space-y-6 mt-4">
+                  {/* Project Icon */}
+                  <motion.div
+                    className="w-32 h-32 rounded-2xl bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center shadow-xl overflow-hidden cursor-pointer relative"
+                    onHoverStart={() => handleHoverStart(stream.name)}
+                    onHoverEnd={() => handleHoverEnd()}
+                    whileHover={{ scale: 1.2 }}
+                    transition={{ duration: 0.5 }}
+                    layoutId={`stream-${stream.name}`}
+                  >
+                    <img
+                      src={stream.backgroundImage}
+                      alt={stream.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+
+                  {/* Name */}
+                  <h3 className="text-xl font-bold text-white tracking-wide">
+                    {stream.name}
+                  </h3>
+
+                  <div className="bg-purple-500/20 border border-purple-400/50 backdrop-blur-md rounded-full px-3 py-1">
+                    <span className="text-purple-300 font-bold text-lg">
+                      {stream.amount} POINT
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  disabled={!!stream.lockUntil}
+                  className="w-full disabled:bg-black disabled:text-white mt-6 bg-white text-black hover:text-white font-semibold rounded-xl transition-all duration-300"
+                >
+                  {!!stream.lockUntil && (
+                    <motion.span
+                      className="relative flex h-2 w-2 mr-2"
+                      animate={{
+                        scale: [1, 1.4, 1],
+                        opacity: [0.8, 0.4, 0.8],
+                      }}
+                      transition={{
+                        duration: 2,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                      }}
+                    >
+                      <motion.span
+                        className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"
+                        animate={{
+                          scale: [1, 2.5, 1],
+                          opacity: [0.7, 0, 0.7],
+                        }}
+                        transition={{
+                          duration: 2,
+                          ease: "easeOut",
+                          repeat: Infinity,
+                        }}
+                      />
+
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                    </motion.span>
+                  )}
+
+                  {!!stream.lockUntil
+                    ? `Locked until ${stream.lockUntil}`
+                    : "Claim Points"}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
