@@ -24,7 +24,6 @@ export const fetchMetadata = async (ipfsUrl: string) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Lỗi khi fetch IPFS:", error);

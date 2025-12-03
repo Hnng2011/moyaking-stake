@@ -16,7 +16,7 @@ import { Button } from "./ui/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CircleCheck } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
-import { useConnection, useReadContract } from "wagmi";
+import { useConnection, useReadContract, useReadContracts } from "wagmi";
 import {
   CONTRACT_ABI,
   CONTRACT_ADDRESS,
@@ -66,14 +66,17 @@ const StreamCard = ({
     },
   });
 
-  const { data: stakeInfo } = useReadContract({
-    address: NFT_CONTRACT_ADDRESS,
-    abi: NFT_CONTRACT_ABI,
-    functionName: "getStakeInfo",
-    args: [id],
+  const { data: periodsData } = useReadContracts({
+    contracts: [0, 1, 2, 4].map((index) => ({
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: "lockPeriods",
+      args: [index],
+    })) as any,
   });
 
   const [NFTData, setNFTData] = useState<any>(undefined);
+  const [periods, setPeriods] = useState<[bigint, string][]>();
 
   const rarity: keyof typeof RarityColor | null = useMemo(() => {
     return getRarity(id);
@@ -89,6 +92,12 @@ const StreamCard = ({
 
     loadNFTData();
   }, [nftIPFSString]);
+
+  useEffect(() => {
+    if (periodsData) {
+      setPeriods(periodsData?.map((data: any) => data?.result));
+    }
+  }, [periodsData]);
 
   return (
     <div onClick={() => onToggle(id)}>
@@ -170,22 +179,21 @@ const StreamCard = ({
             </>
           ) : (
             <div className="text-white flex flex-col h-full w-full items-center justify-center gap-3 animate-in fade-in zoom-in duration-300">
-              {Object.entries(MonthLabel).map(([key, value]) => {
-                const timeValue = Number(key);
+              {periods?.map((period) => {
                 return (
                   <Button
-                    key={key}
+                    key={Number(period[0])}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent toggling card selection
-                      onTimeChange(id, timeValue);
+                      onTimeChange(id, Number(period[0]));
                     }}
                     className={cn(
                       "w-full bg-zinc-600 text-black hover:bg-zinc-500 transition-colors",
-                      selectedTime === timeValue &&
+                      selectedTime === Number(period[0]) &&
                         "bg-zinc-200 hover:bg-zinc-200"
                     )}
                   >
-                    {value}
+                    {period[1]}
                   </Button>
                 );
               })}
