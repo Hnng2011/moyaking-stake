@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent } from "./ui/card";
 import { MonthLabel, RarityColor } from "@/constants/rarity";
 import { Button } from "./ui/button";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CircleCheck } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 
