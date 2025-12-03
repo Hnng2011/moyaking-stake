@@ -22,7 +22,7 @@ export const MonthLabel = {
 
 export const RarityStakingPower = {
   [Rarity.Legendary]: 400,
-  [Rarity.Common]: 10,
+  [Rarity.Common]: 30,
   [Rarity.Uncommon]: 50,
   [Rarity.Rare]: 100,
   [Rarity.SuperRare]: 200,
