@@ -44,7 +44,10 @@ export function RarityInfo() {
           </div>
         </div>
         <div
-          className={cn(RarityColorInfo[Rarity.SuperRare], "p-2 rounded-lg")}
+          className={cn(
+            RarityColorInfo[Rarity.SuperRare],
+            "p-2 rounded-lg opacity-95"
+          )}
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
@@ -73,7 +76,7 @@ export function RarityInfo() {
         <div
           className={cn(
             RarityColorInfo[Rarity.Uncommon],
-            "p-2 rounded-lg opacity-60"
+            "p-2 rounded-lg opacity-65"
           )}
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
@@ -88,7 +91,7 @@ export function RarityInfo() {
         <div
           className={cn(
             RarityColorInfo[Rarity.Common],
-            "p-2 rounded-lg opacity-40"
+            "p-2 rounded-lg opacity-50"
           )}
         >
           <div className="flex justify-between px-8 lg:px-[10%]">

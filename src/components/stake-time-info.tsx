@@ -41,7 +41,7 @@ export function StakeTimeInfo() {
         </div>
         <div
           className={
-            "p-2 rounded-lg bg-linear-to-br from-25% to-purple-800/60 to-75% from-purple-400/10 opacity-75"
+            "p-2 rounded-lg bg-linear-to-br from-25% to-purple-800/60 to-75% from-purple-400/10 opacity-90"
           }
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
@@ -55,7 +55,7 @@ export function StakeTimeInfo() {
         </div>
         <div
           className={
-            "p-2 rounded-lg bg-linear-to-br from-25% to-purple-800/60 to-75% from-purple-400/10 opacity-50"
+            "p-2 rounded-lg bg-linear-to-br from-25% to-purple-800/60 to-75% from-purple-400/10 opacity-70"
           }
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
@@ -69,7 +69,7 @@ export function StakeTimeInfo() {
         </div>
         <div
           className={
-            "p-2 rounded-lg bg-linear-to-br from-25% to-purple-800/60 to-75% from-purple-400/10 opacity-25"
+            "p-2 rounded-lg bg-linear-to-br from-25% to-purple-800/60 to-75% from-purple-400/10 opacity-50"
           }
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
