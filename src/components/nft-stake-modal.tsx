@@ -345,7 +345,7 @@ export function NFTStakeModal({
 
       <DialogContent className="lg:max-w-[900px] max-h-[85vh] overflow-hidden bg-zinc-900 border-0 p-0 rounded-4xl">
         {!isLoading ? (
-          data ? (
+          data && (data as any[])?.length > 0 ? (
             <>
               <ScrollArea className="h-[70vh] p-8 md:p-12 rounded-3xl">
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-6 h-full pb-8">
