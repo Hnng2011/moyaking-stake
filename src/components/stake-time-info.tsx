@@ -32,10 +32,10 @@ export function StakeTimeInfo() {
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
-              <h2>{MonthLabel[12]}</h2>
+              <h2>{MonthLabel[4]}</h2>
             </div>
             <div className="w-50 flex items-center justify-center">
-              <p>{MonthStakingPower[12]}%</p>
+              <p>{MonthStakingPower[4]}%</p>
             </div>
           </div>
         </div>
@@ -46,10 +46,10 @@ export function StakeTimeInfo() {
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
-              <h2>{MonthLabel[6]}</h2>
+              <h2>{MonthLabel[2]}</h2>
             </div>
             <div className="w-50 flex items-center justify-center">
-              <p>{MonthStakingPower[6]}%</p>
+              <p>{MonthStakingPower[2]}%</p>
             </div>
           </div>
         </div>
@@ -60,10 +60,10 @@ export function StakeTimeInfo() {
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
-              <h2>{MonthLabel[3]}</h2>
+              <h2>{MonthLabel[1]}</h2>
             </div>
             <div className="w-50 flex items-center justify-center">
-              <p>{MonthStakingPower[3]}%</p>
+              <p>{MonthStakingPower[1]}%</p>
             </div>
           </div>
         </div>
@@ -74,10 +74,10 @@ export function StakeTimeInfo() {
         >
           <div className="flex justify-between px-8 lg:px-[10%]">
             <div className="w-50 flex items-center justify-center">
-              <h2>{MonthLabel[1]}</h2>
+              <h2>{MonthLabel[0]}</h2>
             </div>
             <div className="w-50 flex items-center justify-center">
-              <p>{MonthStakingPower[1]}%</p>
+              <p>{MonthStakingPower[0]}%</p>
             </div>
           </div>
         </div>

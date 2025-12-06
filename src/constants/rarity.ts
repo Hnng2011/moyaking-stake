@@ -7,17 +7,17 @@ export enum Rarity {
 }
 
 export const MonthStakingPower = {
-  1: 10,
-  3: 50,
-  6: 100,
-  12: 200,
+  0: 10,
+  1: 50,
+  2: 100,
+  4: 200,
 };
 
 export const MonthLabel = {
-  1: "1 Month",
-  3: "3 Months",
-  6: "6 Months",
-  12: "12 Months",
+  0: "1 Month",
+  1: "3 Months",
+  2: "6 Months",
+  4: "12 Months",
 };
 
 export const RarityStakingPower = {

@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { useConnection, useReadContract, useReadContracts } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/constants/blockchain";
 import { getRarity } from "@/lib/utils";
-import { RarityStakingPower } from "@/constants/rarity";
+import { MonthStakingPower, RarityStakingPower } from "@/constants/rarity";
 
 export function StakingCard() {
   const { address } = useConnection();
@@ -36,17 +36,24 @@ export function StakingCard() {
   const stakePower = useMemo(() => {
     if (!listNFTs) return 0;
     else
-      return (listNFTs as bigint[]).reduce((totalPower, id) => {
+      return (listNFTs as bigint[]).reduce((totalPower, id, index) => {
         const rarity = getRarity(id);
+        const timeId = (stakeInfos?.[index].result as any[])?.[3];
+
+        let power = totalPower;
 
         if (rarity) {
-          const power = RarityStakingPower[rarity];
-          return totalPower + power;
+          power = power + RarityStakingPower[rarity];
         }
 
-        return totalPower;
+        if (timeId) {
+          power =
+            power + MonthStakingPower[timeId as keyof typeof MonthStakingPower];
+        }
+
+        return power;
       }, 0);
-  }, [listNFTs]);
+  }, [listNFTs, stakeInfos]);
 
   const countPlaces = useMemo(() => {
     return stakePower
