@@ -222,17 +222,6 @@ export function NFTStakeModal({
     })) as any,
   });
 
-  const { data: isSelectedApproved, isFetching } = useReadContract({
-    address: NFT_CONTRACT_ADDRESS,
-    abi: NFT_CONTRACT_ABI,
-    functionName: "getApproved",
-    args: [selected?.id],
-    query: {
-      enabled: !!selected,
-      refetchInterval: 0,
-    },
-  });
-
   const { mutate, isPending } = useWriteContract();
 
   const ApproveSelectedNFT = useCallback(
@@ -287,10 +276,8 @@ export function NFTStakeModal({
         }
       );
 
-    if (isSelectedApproved !== CONTRACT_ADDRESS) {
-      ApproveSelectedNFT(stake);
-    } else stake();
-  }, [mutate, selected, periods, isSelectedApproved]);
+    ApproveSelectedNFT(stake);
+  }, [mutate, selected, periods]);
 
   const handleToggleStream = useCallback(
     (id: bigint) => {
@@ -373,7 +360,7 @@ export function NFTStakeModal({
               <DialogFooter className="absolute bottom-0 min-h-[61px] w-[98%] bg-zinc-900/90 backdrop-blur p-3 z-50 border-t border-zinc-800">
                 {selected && (
                   <Button
-                    disabled={isPending || isFetching}
+                    disabled={isPending}
                     onClick={handleStake}
                     className="w-full md:w-fit bg-purple-700 hover:bg-purple-600 transition-colors ml-auto"
                   >
