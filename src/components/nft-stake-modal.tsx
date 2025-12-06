@@ -39,13 +39,14 @@ interface SelectedItem {
   time: number;
 }
 
-// --- Sub-Component: StreamCard (Tách ra để code gọn hơn) ---
+// --- Sub-Component: StreamCard (Giữ nguyên không thay đổi) ---
 interface StreamCardProps {
   id: bigint;
   isSelected: boolean;
   selectedTime?: number;
   onToggle: (id: bigint) => void;
   onTimeChange: (id: bigint, time: number) => void;
+  periods: [bigint, string][];
 }
 
 const StreamCard = ({
@@ -54,6 +55,7 @@ const StreamCard = ({
   selectedTime,
   onToggle,
   onTimeChange,
+  periods,
 }: StreamCardProps) => {
   const { data: nftIPFSString, isLoading: ifpsLoading } = useReadContract({
     address: NFT_CONTRACT_ADDRESS,
@@ -66,17 +68,7 @@ const StreamCard = ({
     },
   });
 
-  const { data: periodsData } = useReadContracts({
-    contracts: [0, 1, 2, 4].map((index) => ({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "lockPeriods",
-      args: [index],
-    })) as any,
-  });
-
   const [NFTData, setNFTData] = useState<any>(undefined);
-  const [periods, setPeriods] = useState<[bigint, string][]>();
 
   const rarity: keyof typeof RarityColor | null = useMemo(() => {
     return getRarity(id);
@@ -92,12 +84,6 @@ const StreamCard = ({
 
     loadNFTData();
   }, [nftIPFSString]);
-
-  useEffect(() => {
-    if (periodsData) {
-      setPeriods(periodsData?.map((data: any) => data?.result));
-    }
-  }, [periodsData]);
 
   return (
     <div onClick={() => onToggle(id)}>
@@ -184,7 +170,7 @@ const StreamCard = ({
                   <Button
                     key={Number(period[0])}
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent toggling card selection
+                      e.stopPropagation();
                       onTimeChange(id, Number(period[0]));
                     }}
                     className={cn(
@@ -211,7 +197,10 @@ export function NFTStakeModal({
   streams,
 }: NFTStakeModalProps) {
   const { address } = useConnection();
-  const [selected, setSelected] = useState<SelectedItem[]>([]);
+
+  const [selected, setSelected] = useState<SelectedItem | null>(null);
+
+  const [periods, setPeriods] = useState<[bigint, string][]>();
 
   const { data, isLoading, isError } = useReadContract({
     address: CONTRACT_ADDRESS,
@@ -223,33 +212,48 @@ export function NFTStakeModal({
     },
   });
 
+  const { data: periodsData } = useReadContracts({
+    contracts: [0, 1, 2, 4].map((index) => ({
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: "lockPeriods",
+      args: [index],
+    })) as any,
+  });
+
   const handleToggleStream = useCallback((id: bigint) => {
     setSelected((prev) => {
-      const exists = prev.some((item) => item.id === id);
-      if (exists) {
-        return prev.filter((item) => item.id !== id);
+      if (prev?.id === id) {
+        return null;
       }
-      return [...prev, { id, time: 1 }];
+
+      return { id, time: 1 };
     });
   }, []);
 
   const handleTimeChange = useCallback((id: bigint, time: number) => {
-    setSelected((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, time } : item))
-    );
+    setSelected((prev) => {
+      if (prev?.id === id) {
+        return { ...prev, time };
+      }
+      return prev;
+    });
   }, []);
 
   const handleStake = () => {
     onOpenChange(false);
+    setSelected(null);
   };
-
-  useEffect(() => {
-    if (open) setSelected([]);
-  }, [open]);
 
   useEffect(() => {
     if (isError) toast.error("Error loading your NFT(s)");
   }, [isError]);
+
+  useEffect(() => {
+    if (periodsData) {
+      setPeriods(periodsData?.map((data: any) => data?.result));
+    }
+  }, [periodsData]);
 
   if (!streams || !address) return null;
 
@@ -267,14 +271,15 @@ export function NFTStakeModal({
             <ScrollArea className="h-[70vh] p-8 md:p-12 rounded-3xl">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-6 h-full pb-8">
                 {(data as bigint[] | undefined)?.map((id) => {
-                  const selectedItem = selected.find((s) => s.id === id);
+                  const isSelected = selected?.id === id;
 
                   return (
                     <StreamCard
                       key={Number(id)}
                       id={id}
-                      isSelected={!!selectedItem}
-                      selectedTime={selectedItem?.time}
+                      periods={periods ?? []}
+                      isSelected={isSelected}
+                      selectedTime={isSelected ? selected?.time : undefined}
                       onToggle={handleToggleStream}
                       onTimeChange={handleTimeChange}
                     />
@@ -284,12 +289,12 @@ export function NFTStakeModal({
             </ScrollArea>
 
             <DialogFooter className="absolute bottom-0 min-h-[61px] w-[98%] bg-zinc-900/90 backdrop-blur p-3 z-50 border-t border-zinc-800">
-              {selected.length > 0 && (
+              {selected && (
                 <Button
                   onClick={handleStake}
                   className="w-full md:w-fit bg-purple-700 hover:bg-purple-600 transition-colors ml-auto"
                 >
-                  Stake {selected.length} NFT(s)
+                  Stake NFT
                 </Button>
               )}
             </DialogFooter>
