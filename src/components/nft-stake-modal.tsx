@@ -7,16 +7,17 @@ import {
 import { Stream } from "@/fake-data";
 import { cn, fetchMetadata, getRarity, parseIpfsUrl } from "@/lib/utils";
 import { Card, CardContent } from "./ui/card";
-import {
-  MonthLabel,
-  RarityColor,
-  RarityStakingPower,
-} from "@/constants/rarity";
+import { RarityColor, RarityStakingPower } from "@/constants/rarity";
 import { Button } from "./ui/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CircleCheck } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
-import { useConnection, useReadContract, useReadContracts } from "wagmi";
+import {
+  useConnection,
+  useReadContract,
+  useReadContracts,
+  useWriteContract,
+} from "wagmi";
 import {
   CONTRACT_ABI,
   CONTRACT_ADDRESS,
@@ -202,7 +203,7 @@ export function NFTStakeModal({
 
   const [periods, setPeriods] = useState<[bigint, string][]>();
 
-  const { data, isLoading, isError } = useReadContract({
+  const { data, isLoading } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "getUserWalletNFTs",
@@ -213,7 +214,7 @@ export function NFTStakeModal({
   });
 
   const { data: periodsData } = useReadContracts({
-    contracts: [0, 1, 2, 4].map((index) => ({
+    contracts: [0, 1, 2, 3, 4].map((index) => ({
       address: CONTRACT_ADDRESS,
       abi: CONTRACT_ABI,
       functionName: "lockPeriods",
@@ -221,15 +222,92 @@ export function NFTStakeModal({
     })) as any,
   });
 
-  const handleToggleStream = useCallback((id: bigint) => {
-    setSelected((prev) => {
-      if (prev?.id === id) {
-        return null;
-      }
+  const { data: isSelectedApproved, isFetching } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS,
+    abi: NFT_CONTRACT_ABI,
+    functionName: "getApproved",
+    args: [selected?.id],
+    query: {
+      enabled: !!selected,
+      refetchInterval: 0,
+    },
+  });
 
-      return { id, time: 1 };
+  const { mutate, isPending } = useWriteContract();
+
+  const ApproveSelectedNFT = useCallback(
+    (onSuccess: any) => {
+      if (!selected) return;
+
+      mutate(
+        {
+          address: NFT_CONTRACT_ADDRESS,
+          abi: NFT_CONTRACT_ABI,
+          functionName: "approve",
+          args: [CONTRACT_ADDRESS, selected?.id],
+        },
+        { onSuccess: () => onSuccess() }
+      );
+    },
+    [selected]
+  );
+
+  const StakingSelectedNFT = useCallback(() => {
+    if (!selected || !periods) {
+      toast.error("Please select an NFT");
+      return;
+    }
+
+    const timeIndex = RollBackTimeID(selected?.time, periods);
+    toast.loading("Staking request pending...", {
+      id: "staking-nft",
     });
-  }, []);
+
+    const stake = () =>
+      mutate(
+        {
+          abi: CONTRACT_ABI,
+          address: CONTRACT_ADDRESS,
+          functionName: "stake",
+          args: [selected?.id, timeIndex],
+        },
+        {
+          onSuccess: () => {
+            toast.success("Staking request sent success.", {
+              id: "staking-nft",
+            });
+            onOpenChange(false);
+            setSelected(null);
+          },
+          onError: () => {
+            toast.error("Staking request sent failed", {
+              id: "staking-nft",
+            });
+          },
+        }
+      );
+
+    if (isSelectedApproved !== CONTRACT_ADDRESS) {
+      ApproveSelectedNFT(stake);
+    } else stake();
+  }, [mutate, selected, periods, isSelectedApproved]);
+
+  const handleToggleStream = useCallback(
+    (id: bigint) => {
+      if (!periods) {
+        return null;
+      } else {
+        setSelected((prev) => {
+          if (prev?.id === id) {
+            return null;
+          }
+
+          return { id, time: Number(periods[0][0]) };
+        });
+      }
+    },
+    [periods]
+  );
 
   const handleTimeChange = useCallback((id: bigint, time: number) => {
     setSelected((prev) => {
@@ -241,19 +319,20 @@ export function NFTStakeModal({
   }, []);
 
   const handleStake = () => {
-    onOpenChange(false);
-    setSelected(null);
+    StakingSelectedNFT();
   };
-
-  useEffect(() => {
-    if (isError) toast.error("Error loading your NFT(s)");
-  }, [isError]);
 
   useEffect(() => {
     if (periodsData) {
       setPeriods(periodsData?.map((data: any) => data?.result));
     }
   }, [periodsData]);
+
+  useEffect(() => {
+    if (open) {
+      setSelected(null);
+    }
+  }, [open]);
 
   if (!streams || !address) return null;
 
@@ -267,38 +346,47 @@ export function NFTStakeModal({
 
       <DialogContent className="lg:max-w-[900px] max-h-[85vh] overflow-hidden bg-zinc-900 border-0 p-0 rounded-4xl">
         {!isLoading ? (
-          <>
-            <ScrollArea className="h-[70vh] p-8 md:p-12 rounded-3xl">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-6 h-full pb-8">
-                {(data as bigint[] | undefined)?.map((id) => {
-                  const isSelected = selected?.id === id;
+          data ? (
+            <>
+              <ScrollArea className="h-[70vh] p-8 md:p-12 rounded-3xl">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-6 h-full pb-8">
+                  {(data as bigint[] | undefined)?.map((id) => {
+                    const isSelected = selected?.id === id;
 
-                  return (
-                    <StreamCard
-                      key={Number(id)}
-                      id={id}
-                      periods={periods ?? []}
-                      isSelected={isSelected}
-                      selectedTime={isSelected ? selected?.time : undefined}
-                      onToggle={handleToggleStream}
-                      onTimeChange={handleTimeChange}
-                    />
-                  );
-                })}
-              </div>
-            </ScrollArea>
+                    return (
+                      <StreamCard
+                        key={Number(id)}
+                        id={id}
+                        periods={
+                          periods?.filter((_, index) => index !== 3) ?? []
+                        }
+                        isSelected={isSelected}
+                        selectedTime={isSelected ? selected?.time : undefined}
+                        onToggle={handleToggleStream}
+                        onTimeChange={handleTimeChange}
+                      />
+                    );
+                  })}
+                </div>
+              </ScrollArea>
 
-            <DialogFooter className="absolute bottom-0 min-h-[61px] w-[98%] bg-zinc-900/90 backdrop-blur p-3 z-50 border-t border-zinc-800">
-              {selected && (
-                <Button
-                  onClick={handleStake}
-                  className="w-full md:w-fit bg-purple-700 hover:bg-purple-600 transition-colors ml-auto"
-                >
-                  Stake NFT
-                </Button>
-              )}
-            </DialogFooter>
-          </>
+              <DialogFooter className="absolute bottom-0 min-h-[61px] w-[98%] bg-zinc-900/90 backdrop-blur p-3 z-50 border-t border-zinc-800">
+                {selected && (
+                  <Button
+                    disabled={isPending || isFetching}
+                    onClick={handleStake}
+                    className="w-full md:w-fit bg-purple-700 hover:bg-purple-600 transition-colors ml-auto"
+                  >
+                    {isPending ? "Staking NFT..." : "Stake NFT"}
+                  </Button>
+                )}
+              </DialogFooter>
+            </>
+          ) : (
+            <div className="min-h-[700px] flex w-full justify-center items-center text-xl text-zinc-600">
+              You don't have any NFT(s) yet.
+            </div>
+          )
         ) : (
           <div className="text-white min-h-[700px] flex w-full justify-center items-center">
             Loading...
@@ -308,3 +396,10 @@ export function NFTStakeModal({
     </Dialog>
   );
 }
+
+const RollBackTimeID = (time: number, periods: [bigint, string][]) => {
+  const index = periods.findIndex((period) => Number(period[0]) === time);
+  if (index > -1) {
+    return index;
+  } else return undefined;
+};
