@@ -59,3 +59,17 @@ export function getRarity(tokenId: bigint): Rarity | null {
 
   return null;
 }
+
+export const formatUnlockTimeUS = (timestamp: any) => {
+  if (!timestamp || Number(timestamp) === 0) return null;
+  const date = new Date(Number(timestamp) * 1000);
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(date);
+};
