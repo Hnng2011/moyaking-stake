@@ -147,7 +147,7 @@ const StreamCard = ({ id, onHoverStart, onHoverEnd }: StreamCardProps) => {
 
         {/* Action Button */}
         <Button
-          disabled={!(stakeInfo as any[])?.[6] ?? true}
+          disabled={!(stakeInfo as any[])?.[6]}
           className="w-full bg-white text-black hover:text-white disabled:bg-zinc-900 disabled:text-zinc-400 font-semibold rounded-xl transition-all"
         >
           {!(stakeInfo as any[])?.[6] ? (
