@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { streams } from "@/fake-data";
 import { RarityColor, RarityStakingPower } from "@/constants/rarity";
-import { useReadContract, useConnect, useConnection } from "wagmi";
+import { useReadContract, useConnection } from "wagmi";
 import {
   CONTRACT_ABI,
   CONTRACT_ADDRESS,
@@ -26,22 +26,6 @@ const modalVariants = {
   initial: { scale: 0.9, opacity: 0 },
   animate: { scale: 1, opacity: 1 },
   exit: { scale: 0.9, opacity: 0 },
-};
-
-const pulseVariants = {
-  animate: {
-    scale: [1, 1.4, 1],
-    opacity: [0.8, 0.4, 0.8],
-    transition: { duration: 2, ease: "easeInOut", repeat: Infinity },
-  },
-};
-
-const dotVariants = {
-  animate: {
-    scale: [1, 2.5, 1],
-    opacity: [0.7, 0, 0.7],
-    transition: { duration: 2, ease: "easeOut", repeat: Infinity },
-  },
 };
 
 // --- Child Component: StreamCard ---
